@@ -1,5 +1,6 @@
 import React from "react";
-import "./App.css";
+import "./reset.scss";
+import "./styles.scss";
 import Cards from "./Components/Cards";
 
 function App() {

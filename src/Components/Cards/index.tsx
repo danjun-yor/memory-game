@@ -1,71 +1,142 @@
 import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./styles.scss";
 import {
-  IconLookup,
-  IconDefinition,
-  findIconDefinition
-} from "@fortawesome/fontawesome-svg-core";
+  faBicycle,
+  faCube,
+  faBolt,
+  faBomb,
+  faBone,
+  faLeaf,
+  faPlane,
+  faAnchor,
+  faBus,
+  faGlobe,
+  faWineGlass,
+  faTv,
+  faTaxi,
+  faArchway,
+  faAppleAlt,
+  faBacon,
+  faCookie,
+  faFish,
+  faPizzaSlice,
+  faLemon,
+  faIceCream,
+  faSeedling,
+  faCheese,
+  faCarrot,
+  faCandyCane,
+  faChessBishop,
+  faChessKing,
+  faChessPawn,
+  faChessKnight,
+  faChessQueen,
+  faDice,
+  faGuitar,
+  faHeadphones,
+  faMusic,
+  faHeart,
+  faStar,
+  faBroom,
+  faCat,
+  faGhost,
+  faCrow,
+  faMask,
+  faBurn,
+  faCannabis,
+  faBong,
+  faPlus,
+  faShoppingBag,
+  faStore,
+  faTshirt,
+  IconDefinition
+} from "@fortawesome/free-solid-svg-icons";
+import { shuffle } from "../../Functions";
+import Card from "../Card";
 
-const coffeeLookup: IconLookup = { prefix: "fas", iconName: "coffee" };
-const coffeeIconDefinition: IconDefinition = findIconDefinition(coffeeLookup);
-const iconNames = [
-  "bicycle",
-  "cube",
-  "bolt",
-  "bomb",
-  "bomb",
-  "bone",
-  "leaf",
-  "plane",
-  "anchor",
-  "bus",
-  "globe",
-  "wineglass",
-  "tv",
-  "taxi",
-  "archway",
-  "applealt",
-  "bacon",
-  "cookie",
-  "fish",
-  "pizzaslice",
-  "lemon",
-  "icecream",
-  "seedling",
-  "cheese",
-  "carrot",
-  "candycane",
-  "chessbishop",
-  "chessking",
-  "chesspawn",
-  "chessknight",
-  "chessqueen",
-  "dice",
-  "guitar",
-  "headphones",
-  "music",
-  "heart",
-  "star",
-  "broom",
-  "cat",
-  "ghost",
-  "crow",
-  "mask",
-  "burn",
-  "cannabis",
-  "bong",
-  "plus",
-  "shoppingbag",
-  "store",
-  "tshirt"
+const allIcons = [
+  faBicycle,
+  faCube,
+  faBolt,
+  faBomb,
+  faBone,
+  faLeaf,
+  faPlane,
+  faAnchor,
+  faBus,
+  faGlobe,
+  faWineGlass,
+  faTv,
+  faTaxi,
+  faArchway,
+  faAppleAlt,
+  faBacon,
+  faCookie,
+  faFish,
+  faPizzaSlice,
+  faLemon,
+  faIceCream,
+  faSeedling,
+  faCheese,
+  faCarrot,
+  faCandyCane,
+  faChessBishop,
+  faChessKing,
+  faChessPawn,
+  faChessKnight,
+  faChessQueen,
+  faDice,
+  faGuitar,
+  faHeadphones,
+  faMusic,
+  faHeart,
+  faStar,
+  faBroom,
+  faCat,
+  faGhost,
+  faCrow,
+  faMask,
+  faBurn,
+  faCannabis,
+  faBong,
+  faPlus,
+  faShoppingBag,
+  faStore,
+  faTshirt
 ];
 
 export default class Cards extends Component {
+  state = {
+    level: 1,
+    cards: shuffle(allIcons).slice(0, 2)
+  };
+
+  setCards() {}
+
+  // 레벨 초기화
+  initLevel() {
+    this.setState({ level: 1 });
+  }
+
+  // 레벨 업
+  levelUp() {
+    this.setState({
+      level: ++this.state.level
+    });
+  }
+
+  getCardPairs() {
+    const { cards } = this.state;
+    return shuffle([...cards, ...cards]);
+  }
+
   render() {
+    const cardPairs = this.getCardPairs();
     return (
       <ul className="cards">
-        {/* <FontAwesomeIcon></FontAwesomeIcon>
-        <FontAwesomeIcon></FontAwesomeIcon> */}
+        {cardPairs.map((card, i) => (
+          <Card key={i} card={card} />
+        ))}
       </ul>
     );
   }
