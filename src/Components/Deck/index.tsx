@@ -105,39 +105,43 @@ const allIcons = [
   faTshirt
 ];
 
-export default class Cards extends Component {
+interface Props {}
+
+interface State {
+  cards: Array<any>;
+  selectedCardCount: number;
+}
+
+export default class Deck extends Component<Props, State> {
   state = {
-    level: 1,
-    cards: shuffle(allIcons).slice(0, 2)
+    cards: shuffle(allIcons).slice(0, 2),
+    selectedCardCount: 0
   };
 
   setCards() {}
-
-  // 레벨 초기화
-  initLevel() {
-    this.setState({ level: 1 });
-  }
-
-  // 레벨 업
-  levelUp() {
-    this.setState({
-      level: ++this.state.level
-    });
-  }
 
   getCardPairs() {
     const { cards } = this.state;
     return shuffle([...cards, ...cards]);
   }
 
+  setCount(number: number = 0) {
+    this.setState({
+      selectedCardCount: number
+    });
+  }
+
   render() {
     const cardPairs = this.getCardPairs();
+    console.log(cardPairs);
     return (
-      <ul className="cards">
-        {cardPairs.map((card, i) => (
-          <Card key={i} card={card} />
-        ))}
-      </ul>
+      <section className="deck">
+        <ul className="cards">
+          {cardPairs.map((card, i) => (
+            <Card key={i} card={card} setCount={this.setCount.bind(this)} />
+          ))}
+        </ul>
+      </section>
     );
   }
 }

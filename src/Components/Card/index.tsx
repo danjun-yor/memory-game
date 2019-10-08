@@ -4,89 +4,70 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 interface Props {
   card: IconDefinition;
+  setCount: (number: number) => void;
 }
 
 interface State {
   isOpened: boolean;
   isFlipping: boolean;
+  shouldShow: boolean;
 }
 
 export default class Card extends Component<Props, State> {
   state = {
     isOpened: false,
-    isFlipping: false
+    isFlipping: false,
+    shouldShow: false
   };
 
-  open() {
-    this.setState({
-      isOpened: true
-    });
-  }
-
-  close() {
-    this.setState({
-      isOpened: false
-    });
-  }
-
-  doFlip(classList: Element["classList"], isReverse = false) {
-    if (isReverse) {
-      classList.add("reverse-flip");
-    } else {
-      classList.add("flip");
-    }
+  doFlip() {
     this.setState({
       isFlipping: true
     });
   }
 
-  completeFlip(classList: Element["classList"], isReverse = false) {
-    if (isReverse) {
-      classList.remove("reverse-flip");
-    } else {
-      classList.remove("flip");
-    }
+  finishFlip() {
     this.setState({
+      isOpened: !this.state.isOpened,
       isFlipping: false
     });
   }
 
   handleCardClick(e: React.MouseEvent<HTMLLIElement>) {
     const { isOpened, isFlipping } = this.state;
-    const target = e.currentTarget;
 
     if (isFlipping) {
       return;
     }
 
-    if (isOpened) {
-      this.doFlip(target.classList, true);
+    this.doFlip();
+    setTimeout(() => {
       setTimeout(() => {
-        setTimeout(() => {
-          this.close();
-          this.completeFlip(target.classList, true);
-        }, 500);
-        target.classList.remove("show");
-        target.classList.remove("open");
+        this.finishFlip();
       }, 500);
-    } else {
-      this.doFlip(target.classList);
-      setTimeout(() => {
-        setTimeout(() => {
-          this.completeFlip(target.classList);
-        }, 500);
-        target.classList.add("show");
-        target.classList.add("open");
-        this.open();
-      }, 500);
-    }
+      this.setState({
+        shouldShow: isOpened ? false : true
+      });
+    }, 500);
+  }
+
+  getClassName() {
+    const { isFlipping, isOpened, shouldShow } = this.state;
+
+    return `card x2 ${isFlipping ? (isOpened ? "reverse-flip" : "flip") : ""} ${
+      shouldShow ? "show open" : ""
+    }`;
   }
 
   render() {
     const { card } = this.props;
+    const { isFlipping, isOpened } = this.state;
 
     return (
-      <li className="card x2" onClick={this.handleCardClick.bind(this)}>
+      <li
+        className={this.getClassName()}
+        onClick={this.handleCardClick.bind(this)}
+      >
         <FontAwesomeIcon icon={card} />
       </li>
     );
