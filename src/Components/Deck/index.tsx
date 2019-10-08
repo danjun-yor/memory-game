@@ -109,7 +109,7 @@ interface Props {}
 
 interface State {
   cards: Array<tCard>;
-  selectedCardCount: number;
+  prevCard: tCard | null;
 }
 
 export type tCard = {
@@ -123,12 +123,12 @@ export type tCard = {
 export default class Deck extends Component<Props, State> {
   state = {
     cards: this.initCards(),
-    selectedCardCount: 0
+    prevCard: null
   };
 
   initCards() {
-    const cards = shuffle(allIcons).slice(0, 2);
-    return shuffle([...cards, ...cards]).map((card, i) => {
+    const cards = shuffle<IconDefinition>(allIcons).slice(0, 2);
+    return shuffle<IconDefinition>([...cards, ...cards]).map((card, i) => {
       return {
         id: i,
         card: card,
@@ -139,51 +139,80 @@ export default class Deck extends Component<Props, State> {
     });
   }
 
-  setCount(number: number = 0) {
-    this.setState({
-      selectedCardCount: number
+  flip(ids: number[]) {
+    this.startFlip(ids);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        setTimeout(() => {
+          this.finishFlip(ids);
+        }, 500);
+        this.showCard(ids);
+        return resolve(true);
+      }, 500);
     });
   }
 
-  doFlip(i: number) {
+  startFlip(ids: number[]) {
     const cards = this.state.cards.slice();
-    cards[i].isFlipping = true;
+
+    for (let id of ids) {
+      cards[id].isFlipping = true;
+    }
+
     this.setState({
       cards
     });
   }
 
-  finishFlip(i: number) {
+  finishFlip(ids: number[]) {
     const cards = this.state.cards.slice();
-    cards[i].isOpened = !cards[i].isOpened;
-    cards[i].isFlipping = false;
+
+    for (let id of ids) {
+      cards[id].isOpened = !cards[id].isOpened;
+      cards[id].isFlipping = false;
+    }
+
     this.setState({
       cards
     });
   }
 
-  handleCardClick(i: number) {
+  showCard(ids: number[]) {
+    const cards = this.state.cards.slice();
+
+    for (let id of ids) {
+      cards[id].shouldShow = cards[id].isOpened ? false : true;
+    }
+
+    this.setState({
+      cards
+    });
+  }
+
+  async handleCardClick(i: number) {
+    const { prevCard } = this.state;
     const cards = this.state.cards.slice();
 
     if (cards[i].isFlipping) {
       return;
     }
 
-    this.doFlip(i);
-    setTimeout(() => {
-      setTimeout(() => {
-        this.finishFlip(i);
-      }, 500);
-      cards[i].shouldShow = cards[i].isOpened ? false : true;
+    const isDone = await this.flip([i]);
+    if (!isDone) return;
+    /* ToDo: 카드쌍 맞았는지 틀렸는지 체크 */
+    if (!prevCard) {
       this.setState({
-        cards
+        prevCard: cards[i]
       });
-    }, 500);
+      return;
+    }
+    if (cards[i].card.iconName === prevCard) {
+    } else {
+    }
+    this.setState({
+      prevCard: null
+    });
   }
-
-  // renderCard() {
-  //   return <Card key={i} card={card} onClick={this.setCount.bind(this)} />;
-  // }
 
   render() {
     const { cards } = this.state;
