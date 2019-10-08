@@ -1,58 +1,18 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { tCard } from "../Deck";
 
 interface Props {
-  card: IconDefinition;
-  setCount: (number: number) => void;
+  card: tCard;
+  handleCardClick: (i: number) => void;
 }
 
-interface State {
-  isOpened: boolean;
-  isFlipping: boolean;
-  shouldShow: boolean;
-}
+interface State {}
 
 export default class Card extends Component<Props, State> {
-  state = {
-    isOpened: false,
-    isFlipping: false,
-    shouldShow: false
-  };
-
-  doFlip() {
-    this.setState({
-      isFlipping: true
-    });
-  }
-
-  finishFlip() {
-    this.setState({
-      isOpened: !this.state.isOpened,
-      isFlipping: false
-    });
-  }
-
-  handleCardClick(e: React.MouseEvent<HTMLLIElement>) {
-    const { isOpened, isFlipping } = this.state;
-
-    if (isFlipping) {
-      return;
-    }
-
-    this.doFlip();
-    setTimeout(() => {
-      setTimeout(() => {
-        this.finishFlip();
-      }, 500);
-      this.setState({
-        shouldShow: isOpened ? false : true
-      });
-    }, 500);
-  }
-
   getClassName() {
-    const { isFlipping, isOpened, shouldShow } = this.state;
+    const { isFlipping, isOpened, shouldShow } = this.props.card;
 
     return `card x2 ${isFlipping ? (isOpened ? "reverse-flip" : "flip") : ""} ${
       shouldShow ? "show open" : ""
@@ -60,15 +20,14 @@ export default class Card extends Component<Props, State> {
   }
 
   render() {
-    const { card } = this.props;
-    const { isFlipping, isOpened } = this.state;
+    const { card, handleCardClick } = this.props;
 
     return (
       <li
         className={this.getClassName()}
-        onClick={this.handleCardClick.bind(this)}
+        onClick={() => handleCardClick(card.id)}
       >
-        <FontAwesomeIcon icon={card} />
+        <FontAwesomeIcon icon={card.card} />
       </li>
     );
   }

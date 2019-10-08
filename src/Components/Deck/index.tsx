@@ -108,21 +108,35 @@ const allIcons = [
 interface Props {}
 
 interface State {
-  cards: Array<any>;
+  cards: Array<tCard>;
   selectedCardCount: number;
 }
 
+export type tCard = {
+  id: number;
+  card: IconDefinition;
+  isOpened: boolean;
+  isFlipping: boolean;
+  shouldShow: boolean;
+};
+
 export default class Deck extends Component<Props, State> {
   state = {
-    cards: shuffle(allIcons).slice(0, 2),
+    cards: this.initCards(),
     selectedCardCount: 0
   };
 
-  setCards() {}
-
-  getCardPairs() {
-    const { cards } = this.state;
-    return shuffle([...cards, ...cards]);
+  initCards() {
+    const cards = shuffle(allIcons).slice(0, 2);
+    return shuffle([...cards, ...cards]).map((card, i) => {
+      return {
+        id: i,
+        card: card,
+        isOpened: false,
+        isFlipping: false,
+        shouldShow: false
+      };
+    });
   }
 
   setCount(number: number = 0) {
@@ -131,14 +145,57 @@ export default class Deck extends Component<Props, State> {
     });
   }
 
+  doFlip(i: number) {
+    const cards = this.state.cards.slice();
+    cards[i].isFlipping = true;
+    this.setState({
+      cards
+    });
+  }
+
+  finishFlip(i: number) {
+    const cards = this.state.cards.slice();
+    cards[i].isOpened = !cards[i].isOpened;
+    cards[i].isFlipping = false;
+    this.setState({
+      cards
+    });
+  }
+
+  handleCardClick(i: number) {
+    const cards = this.state.cards.slice();
+
+    if (cards[i].isFlipping) {
+      return;
+    }
+
+    this.doFlip(i);
+    setTimeout(() => {
+      setTimeout(() => {
+        this.finishFlip(i);
+      }, 500);
+      cards[i].shouldShow = cards[i].isOpened ? false : true;
+      this.setState({
+        cards
+      });
+    }, 500);
+  }
+
+  // renderCard() {
+  //   return <Card key={i} card={card} onClick={this.setCount.bind(this)} />;
+  // }
+
   render() {
-    const cardPairs = this.getCardPairs();
-    console.log(cardPairs);
+    const { cards } = this.state;
     return (
       <section className="deck">
         <ul className="cards">
-          {cardPairs.map((card, i) => (
-            <Card key={i} card={card} setCount={this.setCount.bind(this)} />
+          {cards.map((card, i) => (
+            <Card
+              key={i}
+              card={card}
+              handleCardClick={this.handleCardClick.bind(this)}
+            />
           ))}
         </ul>
       </section>
