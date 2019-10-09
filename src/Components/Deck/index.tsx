@@ -110,6 +110,7 @@ interface Props {}
 interface State {
   cards: Array<tCard>;
   prevCard: tCard | null;
+  isFlipping: boolean;
 }
 
 export type tCard = {
@@ -118,12 +119,14 @@ export type tCard = {
   isOpened: boolean;
   isFlipping: boolean;
   shouldShow: boolean;
+  isChecked: boolean;
 };
 
 export default class Deck extends Component<Props, State> {
   state = {
     cards: this.initCards(),
-    prevCard: null
+    prevCard: null,
+    isFlipping: false
   };
 
   initCards() {
@@ -134,9 +137,17 @@ export default class Deck extends Component<Props, State> {
         card: card,
         isOpened: false,
         isFlipping: false,
-        shouldShow: false
+        shouldShow: false,
+        isChecked: false
       };
     });
+  }
+
+  checkClear() {
+    const { cards } = this.state;
+    return cards.filter(card => card.isChecked).length === cards.length
+      ? true
+      : false;
   }
 
   flip(ids: number[]) {
@@ -145,9 +156,9 @@ export default class Deck extends Component<Props, State> {
       setTimeout(() => {
         setTimeout(() => {
           this.finishFlip(ids);
+          return resolve(true);
         }, 500);
         this.showCard(ids);
-        return resolve(true);
       }, 500);
     });
   }
@@ -190,27 +201,43 @@ export default class Deck extends Component<Props, State> {
   }
 
   async handleCardClick(i: number) {
-    const { prevCard } = this.state;
+    const { prevCard, isFlipping } = this.state;
     const cards = this.state.cards.slice();
 
-    if (cards[i].isFlipping) {
-      return;
-    }
+    if (isFlipping) return;
+    if (cards[i].isChecked) return;
+    this.setState({
+      isFlipping: true
+    });
 
     const isDone = await this.flip([i]);
-    if (!isDone) return;
     /* ToDo: 카드쌍 맞았는지 틀렸는지 체크 */
     if (!prevCard) {
       this.setState({
-        prevCard: cards[i]
+        prevCard: cards[i],
+        isFlipping: false
       });
       return;
     }
-    if (cards[i].card.iconName === prevCard) {
+
+    if (cards[i].card.iconName === prevCard!["card"]["iconName"]) {
+      cards[i].isChecked = true;
+      cards[prevCard!["id"]].isChecked = true;
+      this.setState({
+        cards: cards
+      });
+      if (this.checkClear()) {
+        /* ToDo: 다음 레벨로 넘어간다 */
+        console.log("clear");
+      } else {
+        console.log("not clear");
+      }
     } else {
+      this.flip([i, prevCard!["id"]]);
     }
     this.setState({
-      prevCard: null
+      prevCard: null,
+      isFlipping: false
     });
   }
 
