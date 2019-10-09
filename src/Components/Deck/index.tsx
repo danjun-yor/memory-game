@@ -241,6 +241,17 @@ export default class Deck extends Component<Props, State> {
     });
   }
 
+  async componentDidMount() {
+    /* ToDo: 모든 카드를 3초간 보여준 후, 다시 뒤집기 */
+    const { cards } = this.state;
+
+    const cardIds = cards.map(card => card.id);
+    await this.flip(cardIds);
+    setTimeout(() => {
+      this.flip(cardIds);
+    }, 1000);
+  }
+
   render() {
     const { cards } = this.state;
     return (
