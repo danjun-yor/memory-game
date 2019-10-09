@@ -111,11 +111,12 @@ interface State {
   cards: Array<tCard>;
   prevCard: tCard | null;
   isFlipping: boolean;
+  mapSize: number;
 }
 
 export type tCard = {
   id: number;
-  card: IconDefinition;
+  card: IconDefinition | null;
   isOpened: boolean;
   isFlipping: boolean;
   shouldShow: boolean;
@@ -124,23 +125,51 @@ export type tCard = {
 
 export default class Deck extends Component<Props, State> {
   state = {
-    cards: this.initCards(),
+    cards: this.initCards(2),
     prevCard: null,
-    isFlipping: false
+    isFlipping: false,
+    mapSize: 3
   };
 
-  initCards() {
-    const cards = shuffle<IconDefinition>(allIcons).slice(0, 2);
-    return shuffle<IconDefinition>([...cards, ...cards]).map((card, i) => {
-      return {
-        id: i,
-        card: card,
-        isOpened: false,
-        isFlipping: false,
-        shouldShow: false,
-        isChecked: false
-      };
-    });
+  initCards(level: number, nextGame = false) {
+    const cards = shuffle<IconDefinition>(allIcons).slice(0, level + 1);
+
+    /* ToDo: 카드 갯수가 nxn보다 작으면 나머지 칸을 빈카드로 채움 */
+    const tmp = Math.sqrt(cards.length * 2);
+    const mapSize = tmp % 2 === 0 ? tmp : Math.floor(tmp) + 1;
+
+    if (nextGame) {
+      this.setState({
+        mapSize
+      });
+    }
+    const totalCardCount = Math.pow(mapSize, 2);
+    const emptyCards = new Array(totalCardCount - cards.length * 2)
+      .fill(0)
+      .map((v, i) => {
+        return {
+          id: 1000 + i,
+          card: null,
+          isOpened: true,
+          isFlipping: false,
+          shouldShow: false,
+          isChecked: true
+        };
+      });
+
+    return [
+      ...shuffle<IconDefinition>([...cards, ...cards]).map((card, i) => {
+        return {
+          id: i,
+          card: card,
+          isOpened: false,
+          isFlipping: false,
+          shouldShow: false,
+          isChecked: false
+        };
+      }),
+      ...emptyCards
+    ];
   }
 
   checkClear() {
@@ -167,7 +196,9 @@ export default class Deck extends Component<Props, State> {
     const cards = this.state.cards.slice();
 
     for (let id of ids) {
-      cards[id].isFlipping = true;
+      if (id < cards.length && cards[id].card) {
+        cards[id].isFlipping = true;
+      }
     }
 
     this.setState({
@@ -179,8 +210,10 @@ export default class Deck extends Component<Props, State> {
     const cards = this.state.cards.slice();
 
     for (let id of ids) {
-      cards[id].isOpened = !cards[id].isOpened;
-      cards[id].isFlipping = false;
+      if (id < cards.length && cards[id].card) {
+        cards[id].isOpened = !cards[id].isOpened;
+        cards[id].isFlipping = false;
+      }
     }
 
     this.setState({
@@ -192,7 +225,9 @@ export default class Deck extends Component<Props, State> {
     const cards = this.state.cards.slice();
 
     for (let id of ids) {
-      cards[id].shouldShow = cards[id].isOpened ? false : true;
+      if (id < cards.length && cards[id].card) {
+        cards[id].shouldShow = cards[id].isOpened ? false : true;
+      }
     }
 
     this.setState({
@@ -207,6 +242,7 @@ export default class Deck extends Component<Props, State> {
     if (isFlipping) return;
     if (cards[i].isOpened) return;
     if (cards[i].isChecked) return;
+    if (!cards[i].card) return;
     this.setState({
       isFlipping: true
     });
@@ -221,7 +257,7 @@ export default class Deck extends Component<Props, State> {
       return;
     }
 
-    if (cards[i].card.iconName === prevCard!["card"]["iconName"]) {
+    if (cards[i].card!.iconName === prevCard!["card"]["iconName"]) {
       cards[i].isChecked = true;
       cards[prevCard!["id"]].isChecked = true;
       this.setState({
@@ -259,13 +295,14 @@ export default class Deck extends Component<Props, State> {
   }
 
   render() {
-    const { cards } = this.state;
+    const { cards, mapSize } = this.state;
     return (
       <section className="deck">
         <ul className="cards">
           {cards.map((card, i) => (
             <Card
-              key={i}
+              key={card.id}
+              size={mapSize}
               card={card}
               handleCardClick={this.handleCardClick.bind(this)}
             />

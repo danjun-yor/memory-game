@@ -4,6 +4,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { tCard } from "../Deck";
 
 interface Props {
+  size: number;
   card: tCard;
   handleCardClick: (i: number) => void;
 }
@@ -12,11 +13,14 @@ interface State {}
 
 export default class Card extends Component<Props, State> {
   getClassName() {
-    const { isFlipping, isOpened, shouldShow } = this.props.card;
+    const {
+      size,
+      card: { isFlipping, isOpened, shouldShow, card }
+    } = this.props;
 
-    return `card x2 ${isFlipping ? (isOpened ? "reverse-flip" : "flip") : ""} ${
-      shouldShow ? "show open" : ""
-    }`;
+    return `card x${size} ${
+      isFlipping ? (isOpened ? "reverse-flip" : "flip") : ""
+    } ${shouldShow || !card ? "show open" : ""} ${!card ? "disabled" : ""}`;
   }
 
   render() {
@@ -27,7 +31,7 @@ export default class Card extends Component<Props, State> {
         className={this.getClassName()}
         onClick={() => handleCardClick(card.id)}
       >
-        <FontAwesomeIcon icon={card.card} />
+        {card["card"] ? <FontAwesomeIcon icon={card.card} /> : ""}
       </li>
     );
   }

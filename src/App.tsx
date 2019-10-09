@@ -22,7 +22,7 @@ export default class App extends Component<Props, State> {
   // 레벨 업
   levelUp() {
     this.setState({
-      level: ++this.state.level
+      level: this.state.level + 1
     });
   }
 
