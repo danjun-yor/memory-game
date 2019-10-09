@@ -82,9 +82,9 @@
 }
 
 .flip {
-  -moz-animation-duration: 1s;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
+  -moz-animation-duration: 0.8s;
+  -webkit-animation-duration: 0.8s;
+  animation-duration: 0.8s;
   -moz-animation-name: flip;
   -webkit-animation-name: flip;
   animation-name: flip;
@@ -97,9 +97,9 @@
 }
 
 .reverse-flip {
-  -moz-animation-duration: 1s;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
+  -moz-animation-duration: 0.8s;
+  -webkit-animation-duration: 0.8s;
+  animation-duration: 0.8s;
   -moz-animation-name: reverse-flip;
   -webkit-animation-name: reverse-flip;
   animation-name: reverse-flip;
