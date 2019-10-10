@@ -10,7 +10,7 @@ interface State {}
 
 export default class App extends Component<Props, State> {
   state = {
-    stage: 1,
+    stage: 12,
     score: 0,
     time: 0
   };
@@ -76,6 +76,7 @@ export default class App extends Component<Props, State> {
             </div>
           </section>
           <Deck
+            stage={stage}
             scoreUp={this.scoreUp.bind(this)}
             stageUp={this.stageUp.bind(this)}
           />

@@ -106,6 +106,7 @@ const allIcons = [
 ];
 
 interface Props {
+  stage: number;
   scoreUp: () => void;
   stageUp: () => void;
 }
@@ -129,10 +130,14 @@ export type tCard = {
 
 export default class Deck extends Component<Props, State> {
   state = {
-    cards: this.getNewCards(1),
+    cards: this.getNewCards(this.props.stage),
     prevCard: null,
     isFlipping: false,
-    mapSize: 2,
+    mapSize:
+      (this.props.stage + 1) * 2 ===
+      Math.pow(Math.floor(Math.sqrt((this.props.stage + 1) * 2)), 2)
+        ? Math.floor(Math.sqrt((this.props.stage + 1) * 2))
+        : Math.floor(Math.sqrt((this.props.stage + 1) * 2)) + 1,
     onNextStage: false
   };
 
@@ -333,6 +338,15 @@ export default class Deck extends Component<Props, State> {
 
   render() {
     const { cards, mapSize } = this.state;
+
+    // console.log(
+    //   this.props.stage + 1,
+    //   (this.props.stage + 1) * 2,
+    //   Math.floor(Math.sqrt((this.props.stage + 1) * 2)),
+    //   ((this.props.stage + 1) * 2) %
+    //     Math.floor(Math.sqrt((this.props.stage + 1) * 2))
+    // );
+
     return (
       <section className="deck">
         <ul className="cards">
