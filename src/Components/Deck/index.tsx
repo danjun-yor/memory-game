@@ -105,13 +105,17 @@ const allIcons = [
   faTshirt
 ];
 
-interface Props {}
+interface Props {
+  scoreUp: () => void;
+  stageUp: () => void;
+}
 
 interface State {
   cards: Array<tCard>;
   prevCard: tCard | null;
   isFlipping: boolean;
   mapSize: number;
+  onNextStage: boolean;
 }
 
 export type tCard = {
@@ -125,14 +129,15 @@ export type tCard = {
 
 export default class Deck extends Component<Props, State> {
   state = {
-    cards: this.initCards(2),
+    cards: this.getNewCards(1),
     prevCard: null,
     isFlipping: false,
-    mapSize: 3
+    mapSize: 2,
+    onNextStage: false
   };
 
-  initCards(level: number, nextGame = false) {
-    const cards = shuffle<IconDefinition>(allIcons).slice(0, level + 1);
+  getNewCards(stage: number, nextGame = false) {
+    const cards = shuffle<IconDefinition>(allIcons).slice(0, stage + 1);
 
     /* ToDo: 카드 갯수가 nxn보다 작으면 나머지 칸을 빈카드로 채움 */
     const tmp = Math.sqrt(cards.length * 2);
@@ -236,6 +241,7 @@ export default class Deck extends Component<Props, State> {
   }
 
   async handleCardClick(i: number) {
+    const { scoreUp, stageUp } = this.props;
     const { prevCard, isFlipping } = this.state;
     const cards = this.state.cards.slice();
 
@@ -263,19 +269,26 @@ export default class Deck extends Component<Props, State> {
       this.setState({
         cards: cards
       });
-      if (this.checkClear()) {
-        /* ToDo: 다음 레벨로 넘어간다 */
-        console.log("clear");
-      } else {
-        console.log("not clear");
-      }
+      scoreUp();
     } else {
       this.flip([i, prevCard!["id"]]);
     }
-    this.setState({
+    await this.setState({
       prevCard: null,
       isFlipping: false
     });
+    if (this.checkClear()) {
+      /* ToDo: 다음 레벨로 넘어간다 */
+      console.log("clear");
+      stageUp();
+      this.setState({
+        cards: this.getNewCards(this.state.mapSize, true),
+        onNextStage: true
+      });
+      // this.render();
+    } else {
+      console.log("not clear");
+    }
   }
 
   async componentDidMount() {
@@ -292,6 +305,30 @@ export default class Deck extends Component<Props, State> {
         isFlipping: false
       });
     }, 1000);
+  }
+
+  async componentDidUpdate() {
+    const { cards, onNextStage } = this.state;
+
+    if (onNextStage) {
+      this.setState({
+        onNextStage: false
+      });
+      // css로 카드가 뒤집어지는데 0.8초 걸려서 타임아웃으로 실행을 늦춤
+      setTimeout(async () => {
+        const cardIds = cards.map(card => card.id);
+        this.setState({
+          isFlipping: true
+        });
+        await this.flip(cardIds);
+        setTimeout(async () => {
+          await this.flip(cardIds);
+          this.setState({
+            isFlipping: false
+          });
+        }, 1000);
+      }, 400);
+    }
   }
 
   render() {

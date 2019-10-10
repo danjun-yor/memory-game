@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./reset.scss";
 import "./styles.scss";
 import Deck from "./Components/Deck";
+import { formatSeconds } from "./Functions";
 
 interface Props {}
 
@@ -9,31 +10,49 @@ interface State {}
 
 export default class App extends Component<Props, State> {
   state = {
-    level: 1,
+    stage: 1,
     score: 0,
     time: 0
   };
 
+  timerID = (0 as unknown) as NodeJS.Timeout;
+
   // 레벨 초기화
-  initLevel() {
-    this.setState({ level: 1 });
+  initStage() {
+    this.setState({ stage: 1 });
   }
 
   // 레벨 업
-  levelUp() {
+  stageUp() {
     this.setState({
-      level: this.state.level + 1
+      stage: this.state.stage + 1
     });
   }
 
-  setScore(score: number) {
+  startTimer() {
+    this.timerID = setInterval(() => {
+      this.setState({
+        time: this.state.time + 1
+      });
+    }, 1000);
+  }
+
+  componentDidMount() {
+    this.startTimer();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  scoreUp() {
     this.setState({
-      score
+      score: this.state.score + 100
     });
   }
 
   render() {
-    const { level, score, time } = this.state;
+    const { stage, score, time } = this.state;
 
     return (
       <div className="App">
@@ -46,11 +65,20 @@ export default class App extends Component<Props, State> {
         */}
         <main>
           <section className="score-panel">
-            레벨: <span>1</span>
-            점수: <span>0</span>
-            시간: <span>0:00</span>
+            <div>
+              스테이지: <span>{stage}</span>
+            </div>
+            <div>
+              점수: <span>{score}</span>
+            </div>
+            <div>
+              시간: <span>{formatSeconds(time)}</span>
+            </div>
           </section>
-          <Deck />
+          <Deck
+            scoreUp={this.scoreUp.bind(this)}
+            stageUp={this.stageUp.bind(this)}
+          />
         </main>
 
         <footer></footer>
