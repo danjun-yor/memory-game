@@ -286,7 +286,7 @@ export default class Deck extends Component<Props, State> {
     if (this.checkClear()) {
       stageUp();
       this.setState({
-        cards: this.getNewCards(this.state.mapSize, true),
+        cards: this.getNewCards(this.props.stage, true),
         onNextStage: true
       });
     }
