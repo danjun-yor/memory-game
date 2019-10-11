@@ -1,6 +1,11 @@
 @mixin card-size($size, $show: false) {
-  width: calc((100% / #{$size}) - 0.5rem);
-  height: calc((100% / #{$size}) - 0.5rem);
+  @if $size >= 6 {
+    width: calc((100% / #{$size}) - 0.2rem);
+    height: calc((100% / #{$size}) - 0.2rem);
+  } @else {
+    width: calc((100% / #{$size}) - 0.5rem);
+    height: calc((100% / #{$size}) - 0.5rem);
+  }
 }
 
 @mixin card-font-size($size) {
@@ -12,6 +17,10 @@
     font-size: 51px;
   } @else if $size == 5 {
     font-size: 51px;
+  } @else if $size == 6 {
+    font-size: 20px;
+  } @else if $size == 7 {
+    font-size: 16px;
   }
 }
 
@@ -42,6 +51,7 @@
       font-size: 0;
       color: #ffffff;
       border-radius: 8px;
+      border: 10px solid transparent;
       cursor: pointer;
       display: flex;
       justify-content: center;
@@ -70,6 +80,18 @@
         @include card-size(5);
         &.show {
           @include card-font-size(5);
+        }
+      }
+      &.x6 {
+        @include card-size(6);
+        &.show {
+          @include card-font-size(6);
+        }
+      }
+      &.x7 {
+        @include card-size(7);
+        &.show {
+          @include card-font-size(7);
         }
       }
       &.open {

@@ -339,13 +339,13 @@ export default class Deck extends Component<Props, State> {
   render() {
     const { cards, mapSize } = this.state;
 
-    // console.log(
-    //   this.props.stage + 1,
-    //   (this.props.stage + 1) * 2,
-    //   Math.floor(Math.sqrt((this.props.stage + 1) * 2)),
-    //   ((this.props.stage + 1) * 2) %
-    //     Math.floor(Math.sqrt((this.props.stage + 1) * 2))
-    // );
+    console.log(
+      this.props.stage + 1,
+      (this.props.stage + 1) * 2,
+      Math.floor(Math.sqrt((this.props.stage + 1) * 2)),
+      ((this.props.stage + 1) * 2) %
+        Math.floor(Math.sqrt((this.props.stage + 1) * 2))
+    );
 
     return (
       <section className="deck">
