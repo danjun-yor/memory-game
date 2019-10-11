@@ -258,7 +258,7 @@ export default class Deck extends Component<Props, State> {
       isFlipping: true
     });
 
-    const isDone = await this.flip([i]);
+    await this.flip([i]);
     /* ToDo: 카드쌍 맞았는지 틀렸는지 체크 */
     if (!prevCard) {
       this.setState({
@@ -283,16 +283,11 @@ export default class Deck extends Component<Props, State> {
       isFlipping: false
     });
     if (this.checkClear()) {
-      /* ToDo: 다음 레벨로 넘어간다 */
-      console.log("clear");
       stageUp();
       this.setState({
         cards: this.getNewCards(this.state.mapSize, true),
         onNextStage: true
       });
-      // this.render();
-    } else {
-      console.log("not clear");
     }
   }
 
@@ -338,14 +333,6 @@ export default class Deck extends Component<Props, State> {
 
   render() {
     const { cards, mapSize } = this.state;
-
-    console.log(
-      this.props.stage + 1,
-      (this.props.stage + 1) * 2,
-      Math.floor(Math.sqrt((this.props.stage + 1) * 2)),
-      ((this.props.stage + 1) * 2) %
-        Math.floor(Math.sqrt((this.props.stage + 1) * 2))
-    );
 
     return (
       <section className="deck">
