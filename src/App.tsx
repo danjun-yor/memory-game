@@ -10,7 +10,7 @@ interface State {}
 
 export default class App extends Component<Props, State> {
   state = {
-    stage: 20,
+    stage: 2,
     score: 0,
     time: 0
   };
@@ -45,9 +45,9 @@ export default class App extends Component<Props, State> {
     clearInterval(this.timerID);
   }
 
-  scoreUp() {
+  scoreUp(cnt: number) {
     this.setState({
-      score: this.state.score + 100
+      score: this.state.score + 100 * cnt
     });
   }
 
@@ -58,11 +58,14 @@ export default class App extends Component<Props, State> {
       <div className="App">
         <header>
           <h1>짝 맞추기 게임</h1>
+          <button
+            onClick={() => {
+              alert("순위!");
+            }}
+          >
+            로그인
+          </button>
         </header>
-        {/*
-        1. 레벨이 증가할 때마다 게임의 칸수가 2x2 부터 가로/세로 하나씩 증가
-        2. 제한시간은 2분! => 지나면 종료
-        */}
         <main>
           <section className="score-panel">
             <div>

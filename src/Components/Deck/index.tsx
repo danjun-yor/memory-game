@@ -107,13 +107,13 @@ const allIcons = [
 
 interface Props {
   stage: number;
-  scoreUp: () => void;
+  scoreUp: (cnt: number) => void;
   stageUp: () => void;
 }
 
 interface State {
   cards: Array<tCard>;
-  prevCard: tCard | null;
+  checkCardIds: Array<number>;
   isFlipping: boolean;
   mapSize: number;
   onNextStage: boolean;
@@ -131,7 +131,7 @@ export type tCard = {
 export default class Deck extends Component<Props, State> {
   state = {
     cards: this.getNewCards(this.props.stage),
-    prevCard: null,
+    checkCardIds: [] as Array<number>,
     isFlipping: false,
     mapSize: this.getMapSize(),
     onNextStage: false
@@ -247,48 +247,55 @@ export default class Deck extends Component<Props, State> {
   }
 
   async handleCardClick(i: number) {
-    const { scoreUp, stageUp } = this.props;
-    const { prevCard, isFlipping } = this.state;
     const cards = this.state.cards.slice();
+    const checkCardIds = this.state.checkCardIds.slice();
 
-    if (isFlipping) return;
     if (!cards[i]) return;
     if (!cards[i].card) return;
     if (cards[i].isOpened) return;
     if (cards[i].isChecked) return;
+    if (cards[i].isFlipping) return;
+
+    checkCardIds.push(i);
     this.setState({
-      isFlipping: true
+      checkCardIds: checkCardIds
     });
-
     await this.flip([i]);
-    /* ToDo: 카드쌍 맞았는지 틀렸는지 체크 */
-    if (!prevCard) {
-      this.setState({
-        prevCard: cards[i],
-        isFlipping: false
-      });
-      return;
-    }
 
-    if (cards[i].card!.iconName === prevCard!["card"]["iconName"]) {
-      cards[i].isChecked = true;
-      cards[prevCard!["id"]].isChecked = true;
+    if (cards.every(card => !card.isFlipping)) {
+      let cnt = 0;
+      const shouldFilpCardIds = [];
+      while (checkCardIds.length >= 2) {
+        const pairCardIds = checkCardIds.splice(0, 2);
+
+        if (
+          cards[pairCardIds[0]].card!.iconName ===
+          cards[pairCardIds[1]].card!.iconName
+        ) {
+          cards[pairCardIds[0]].isChecked = true;
+          cards[pairCardIds[1]].isChecked = true;
+          cnt++;
+        } else {
+          shouldFilpCardIds.push(...pairCardIds);
+        }
+      }
+
+      this.props.scoreUp(cnt);
+      if (cards.every(card => card.isChecked)) {
+        this.props.stageUp();
+        this.setState({
+          cards: this.getNewCards(this.props.stage + 1, true),
+          onNextStage: true
+        });
+      } else {
+        this.setState({
+          cards: cards
+        });
+      }
+
+      await this.flip(shouldFilpCardIds);
       this.setState({
-        cards: cards
-      });
-      scoreUp();
-    } else {
-      this.flip([i, prevCard!["id"]]);
-    }
-    await this.setState({
-      prevCard: null,
-      isFlipping: false
-    });
-    if (this.checkClear()) {
-      stageUp();
-      this.setState({
-        cards: this.getNewCards(this.props.stage, true),
-        onNextStage: true
+        checkCardIds: checkCardIds
       });
     }
   }
@@ -297,37 +304,25 @@ export default class Deck extends Component<Props, State> {
     const { cards } = this.state;
 
     const cardIds = cards.map(card => card.id);
-    this.setState({
-      isFlipping: true
-    });
     await this.flip(cardIds);
     setTimeout(async () => {
       await this.flip(cardIds);
-      this.setState({
-        isFlipping: false
-      });
     }, 1000);
   }
 
   async componentDidUpdate() {
-    const { cards, onNextStage } = this.state;
+    const { onNextStage } = this.state;
+    const { cards } = this.state;
 
     if (onNextStage) {
       this.setState({
         onNextStage: false
       });
-      // css로 카드가 뒤집어지는데 0.8초 걸려서 타임아웃으로 실행을 늦춤
       setTimeout(async () => {
         const cardIds = cards.map(card => card.id);
-        this.setState({
-          isFlipping: true
-        });
         await this.flip(cardIds);
         setTimeout(async () => {
           await this.flip(cardIds);
-          this.setState({
-            isFlipping: false
-          });
         }, 1000);
       }, 400);
     }
