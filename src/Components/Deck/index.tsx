@@ -113,7 +113,6 @@ interface Props {
 
 interface State {
   cards: Array<tCard>;
-  checkCardIds: Array<number>;
   isFlipping: boolean;
   mapSize: number;
   onNextStage: boolean;
@@ -131,11 +130,12 @@ export type tCard = {
 export default class Deck extends Component<Props, State> {
   state = {
     cards: this.getNewCards(this.props.stage),
-    checkCardIds: [] as Array<number>,
     isFlipping: false,
     mapSize: this.getMapSize(),
     onNextStage: false
   };
+
+  checkCardIds = [] as Array<number>;
 
   getMapSize() {
     return (this.props.stage + 2) * 2 ===
@@ -181,13 +181,6 @@ export default class Deck extends Component<Props, State> {
       }),
       ...emptyCards
     ];
-  }
-
-  checkClear() {
-    const { cards } = this.state;
-    return cards.filter(card => card.isChecked).length === cards.length
-      ? true
-      : false;
   }
 
   flip(ids: number[]) {
@@ -248,7 +241,6 @@ export default class Deck extends Component<Props, State> {
 
   async handleCardClick(i: number) {
     const cards = this.state.cards.slice();
-    const checkCardIds = this.state.checkCardIds.slice();
 
     if (!cards[i]) return;
     if (!cards[i].card) return;
@@ -256,12 +248,11 @@ export default class Deck extends Component<Props, State> {
     if (cards[i].isChecked) return;
     if (cards[i].isFlipping) return;
 
+    const checkCardIds = this.checkCardIds;
     checkCardIds.push(i);
-    this.setState({
-      checkCardIds: checkCardIds
-    });
-    await this.flip([i]);
 
+    await this.flip([i]);
+    // console.log(checkCardIds);
     if (cards.every(card => !card.isFlipping)) {
       let cnt = 0;
       const shouldFilpCardIds = [];
@@ -280,6 +271,10 @@ export default class Deck extends Component<Props, State> {
         }
       }
 
+      if (shouldFilpCardIds.length > 0) {
+        await this.flip(shouldFilpCardIds);
+      }
+
       this.props.scoreUp(cnt);
       if (cards.every(card => card.isChecked)) {
         this.props.stageUp();
@@ -292,11 +287,6 @@ export default class Deck extends Component<Props, State> {
           cards: cards
         });
       }
-
-      await this.flip(shouldFilpCardIds);
-      this.setState({
-        checkCardIds: checkCardIds
-      });
     }
   }
 
