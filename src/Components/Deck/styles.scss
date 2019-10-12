@@ -1,3 +1,6 @@
+@import "include-media/dist/_include-media.scss";
+@import "../../media.scss";
+
 @mixin card-size($size, $show: false) {
   @if $size >= 6 {
     width: calc((100% / #{$size}) - 0.2rem);
@@ -10,17 +13,32 @@
 
 @mixin card-font-size($size) {
   @if $size == 2 {
-    font-size: 51px;
+    font-size: 60px;
   } @else if $size == 3 {
-    font-size: 51px;
+    font-size: 60px;
   } @else if $size == 4 {
     font-size: 51px;
   } @else if $size == 5 {
-    font-size: 51px;
+    font-size: 41px;
   } @else if $size == 6 {
-    font-size: 20px;
+    font-size: 36px;
   } @else if $size == 7 {
-    font-size: 16px;
+    font-size: 30px;
+  }
+  @include media("<=phone") {
+    @if $size == 2 {
+      font-size: 2.5rem;
+    } @else if $size == 3 {
+      font-size: 2.2rem;
+    } @else if $size == 4 {
+      font-size: 2rem;
+    } @else if $size == 5 {
+      font-size: 1.5rem;
+    } @else if $size == 6 {
+      font-size: 1.2rem;
+    } @else if $size == 7 {
+      font-size: 1.1rem;
+    }
   }
 }
 
@@ -37,6 +55,12 @@
   box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
   width: 90vw;
   height: 90vw;
+  max-width: 659px;
+  max-height: 659px;
+
+  @include media(">tablet") {
+    width: 100%;
+  }
 
   .cards {
     display: flex;

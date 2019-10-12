@@ -138,14 +138,14 @@ export default class Deck extends Component<Props, State> {
   };
 
   getMapSize() {
-    return (this.props.stage + 1) * 2 ===
-      Math.pow(Math.floor(Math.sqrt((this.props.stage + 1) * 2)), 2)
-      ? Math.floor(Math.sqrt((this.props.stage + 1) * 2))
-      : Math.floor(Math.sqrt((this.props.stage + 1) * 2)) + 1;
+    return (this.props.stage + 2) * 2 ===
+      Math.pow(Math.floor(Math.sqrt((this.props.stage + 2) * 2)), 2)
+      ? Math.floor(Math.sqrt((this.props.stage + 2) * 2))
+      : Math.floor(Math.sqrt((this.props.stage + 2) * 2)) + 1;
   }
 
   getNewCards(stage: number, nextGame = false) {
-    const cards = shuffle<IconDefinition>(allIcons).slice(0, stage + 1);
+    const cards = shuffle<IconDefinition>(allIcons).slice(0, stage + 2);
 
     /* ToDo: 카드 갯수가 nxn보다 작으면 나머지 칸을 빈카드로 채움 */
     const mapSize = this.getMapSize();
@@ -252,9 +252,10 @@ export default class Deck extends Component<Props, State> {
     const cards = this.state.cards.slice();
 
     if (isFlipping) return;
+    if (!cards[i]) return;
+    if (!cards[i].card) return;
     if (cards[i].isOpened) return;
     if (cards[i].isChecked) return;
-    if (!cards[i].card) return;
     this.setState({
       isFlipping: true
     });
