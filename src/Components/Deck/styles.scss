@@ -118,10 +118,15 @@
           @include card-font-size(7);
         }
       }
+      &.checked {
+        background: #0569ff;
+      }
       &.open {
         transform: rotateY(0);
-        background: #02b3e4;
         cursor: default;
+      }
+      &.open:not(.checked) {
+        background: #02b3e4;
       }
       &.disabled {
         background: transparent;
