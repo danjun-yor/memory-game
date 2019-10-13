@@ -51,6 +51,12 @@ export default class App extends Component<Props, State> {
     });
   }
 
+  scoreDown(cnt: number) {
+    this.setState({
+      score: this.state.score - 10 * cnt
+    });
+  }
+
   render() {
     const { stage, score, time } = this.state;
 
@@ -81,6 +87,7 @@ export default class App extends Component<Props, State> {
           <Deck
             stage={stage}
             scoreUp={this.scoreUp.bind(this)}
+            scoreDown={this.scoreDown.bind(this)}
             stageUp={this.stageUp.bind(this)}
           />
         </main>

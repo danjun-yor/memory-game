@@ -108,6 +108,7 @@ const allIcons = [
 interface Props {
   stage: number;
   scoreUp: (cnt: number) => void;
+  scoreDown: (cnt: number) => void;
   stageUp: () => void;
 }
 
@@ -247,7 +248,8 @@ export default class Deck extends Component<Props, State> {
     await this.flip([i]);
     // console.log(checkCardIds);
     if (cards.every(card => !card.isFlipping)) {
-      let cnt = 0;
+      let succCnt = 0,
+        failCnt = 0;
       const shouldFilpCardIds = [];
       while (checkCardIds.length >= 2) {
         const pairCardIds = checkCardIds.splice(0, 2);
@@ -258,9 +260,10 @@ export default class Deck extends Component<Props, State> {
         ) {
           cards[pairCardIds[0]].isChecked = true;
           cards[pairCardIds[1]].isChecked = true;
-          cnt++;
+          succCnt++;
         } else {
           shouldFilpCardIds.push(...pairCardIds);
+          failCnt++;
         }
       }
 
@@ -268,7 +271,8 @@ export default class Deck extends Component<Props, State> {
         await this.flip(shouldFilpCardIds);
       }
 
-      this.props.scoreUp(cnt);
+      this.props.scoreUp(succCnt);
+      this.props.scoreDown(failCnt);
       if (cards.every(card => card.isChecked)) {
         setTimeout(() => {
           this.props.stageUp();
