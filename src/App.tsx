@@ -10,7 +10,7 @@ interface State {}
 
 export default class App extends Component<Props, State> {
   state = {
-    stage: 2,
+    stage: 1,
     score: 0,
     time: 0
   };

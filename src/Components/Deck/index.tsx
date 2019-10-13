@@ -131,29 +131,22 @@ export default class Deck extends Component<Props, State> {
   state = {
     cards: this.getNewCards(this.props.stage),
     isFlipping: false,
-    mapSize: this.getMapSize(),
+    mapSize: this.getMapSize(this.props.stage),
     onNextStage: false
   };
 
   checkCardIds = [] as Array<number>;
 
-  getMapSize() {
-    return (this.props.stage + 2) * 2 ===
-      Math.pow(Math.floor(Math.sqrt((this.props.stage + 2) * 2)), 2)
-      ? Math.floor(Math.sqrt((this.props.stage + 2) * 2))
-      : Math.floor(Math.sqrt((this.props.stage + 2) * 2)) + 1;
+  getMapSize(stage: number) {
+    const value = Math.floor(Math.sqrt((stage + 2) * 2));
+    return (stage + 2) * 2 === Math.pow(value, 2) ? value : value + 1;
   }
 
-  getNewCards(stage: number, nextGame = false) {
+  getNewCards(stage: number) {
     const cards = shuffle<IconDefinition>(allIcons).slice(0, stage + 2);
 
     /* ToDo: 카드 갯수가 nxn보다 작으면 나머지 칸을 빈카드로 채움 */
-    const mapSize = this.getMapSize();
-    if (nextGame) {
-      this.setState({
-        mapSize
-      });
-    }
+    const mapSize = this.getMapSize(stage);
     const totalCardCount = Math.pow(mapSize, 2);
     const emptyCards = new Array(totalCardCount - cards.length * 2)
       .fill(0)
@@ -277,11 +270,14 @@ export default class Deck extends Component<Props, State> {
 
       this.props.scoreUp(cnt);
       if (cards.every(card => card.isChecked)) {
-        this.props.stageUp();
-        this.setState({
-          cards: this.getNewCards(this.props.stage + 1, true),
-          onNextStage: true
-        });
+        setTimeout(() => {
+          this.props.stageUp();
+          this.setState({
+            cards: this.getNewCards(this.props.stage),
+            mapSize: this.getMapSize(this.props.stage),
+            onNextStage: true
+          });
+        }, 800);
       } else {
         this.setState({
           cards: cards
