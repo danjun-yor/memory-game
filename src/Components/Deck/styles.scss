@@ -124,6 +124,9 @@
       &.open {
         transform: rotateY(0);
         cursor: default;
+        path {
+          display: initial;
+        }
       }
       &.open:not(.checked) {
         background: #02b3e4;
