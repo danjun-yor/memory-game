@@ -3,6 +3,7 @@ import { gql } from "apollo-boost";
 import "./styles.scss";
 import Deck from "../Deck";
 import { formatSeconds } from "../../Functions";
+import LinkButton from "../LinkButton";
 
 interface Props {}
 interface State {}
@@ -63,13 +64,9 @@ class Game extends Component<Props, State> {
       <div className="App">
         <header>
           <h1>짝 맞추기 게임</h1>
-          <button
-            onClick={() => {
-              alert("순위!");
-            }}
-          >
+          <LinkButton to="/login" className="login-link">
             로그인
-          </button>
+          </LinkButton>
         </header>
         <main>
           <section className="score-panel">

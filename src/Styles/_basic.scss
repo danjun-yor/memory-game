@@ -1,0 +1,9 @@
+@import "./colors";
+
+@mixin button {
+  color: $white;
+  background: $black;
+  border: none;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+}

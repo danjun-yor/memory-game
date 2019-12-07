@@ -1,5 +1,6 @@
-@import "include-media/dist/_include-media.scss";
-@import "./media.scss";
+@import "include-media/dist/_include-media";
+@import "./_media";
+@import "./Styles/_basic";
 
 @font-face {
   font-family: "HangeulNuri-Bold";
@@ -27,7 +28,7 @@ body {
   padding: 0;
 }
 body {
-  background: #ffffff; /* Background pattern from Subtle Patterns */
+  background: $white; /* Background pattern from Subtle Patterns */
   font-family: "HangeulNuri-Bold", "Nanum Gothic", "Open Sans", sans-serif;
 }
 
@@ -62,7 +63,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #14222d;
+  background: $black;
   color: white;
   border-radius: 10px;
   padding: 12px;

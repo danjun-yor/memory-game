@@ -1,0 +1,5 @@
+@import "../../Styles/basic";
+
+.login-link {
+  @include button;
+}
