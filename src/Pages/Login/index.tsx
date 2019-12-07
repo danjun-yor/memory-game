@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
+import "./styles.scss";
 
 interface Props {}
 interface State {}
@@ -27,17 +28,23 @@ class Login extends Component<Props, State> {
 
   render() {
     return (
-      <>
-        <form name="sign-in-form">
-          <label htmlFor="id">이름</label>
-          <input type="text" name="id" id="id" />
-          <label htmlFor="password">이름</label>
-          <input type="password" name="password" id="password" />
-          <label htmlFor="name">이름</label>
-          <input type="text" name="name" id="name" />
-          <input type="submit" value="로그인" />
+      <div className="container login-container">
+        <form name="sign-in-form" className="sign-in-form">
+          <div className="row">
+            <label htmlFor="id">이메일</label>
+            <input type="text" name="id" id="id" />
+          </div>
+          <div className="row">
+            <label htmlFor="password">비밀번호</label>
+            <input type="password" name="password" id="password" />
+          </div>
+          <div className="row">
+            <label htmlFor="name">이름</label>
+            <input type="text" name="name" id="name" />
+          </div>
+          <input type="submit" className="btn-login" value="로그인" />
         </form>
-      </>
+      </div>
     );
   }
 }

@@ -1,0 +1,35 @@
+@import "../../Styles/_basic";
+
+.login-container {
+  height: 100%;
+
+  .sign-in-form {
+    border: 1px solid $gray;
+    border-radius: 10px;
+    padding: 10px 15px;
+
+    .row {
+      margin-bottom: 3px;
+      label {
+        display: inline-block;
+        width: 70px;
+      }
+
+      input {
+        &[type="text"],
+        &[type="password"] {
+          padding: 3px;
+        }
+
+        &[type="password"] {
+          font-family: caption;
+        }
+      }
+    }
+
+    .btn-login {
+      @include button;
+      float: right;
+    }
+  }
+}
