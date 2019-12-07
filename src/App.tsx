@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import "./reset.scss";
 import "./styles.scss";
 import { Switch, Route, Redirect } from "react-router-dom";
-import Login from "./Components/Login";
-import Game from "./Components/Game";
+import Login from "./Pages/Login";
+import Game from "./Pages/Game";
 
 interface Props {}
 interface State {}

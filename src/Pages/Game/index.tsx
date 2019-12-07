@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { gql } from "apollo-boost";
 import "./styles.scss";
-import Deck from "../Deck";
+import Deck from "../../Components/Deck";
 import { formatSeconds } from "../../Functions";
-import LinkButton from "../LinkButton";
+import LinkButton from "../../Components/LinkButton";
 
 interface Props {}
 interface State {}
