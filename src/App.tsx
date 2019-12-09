@@ -5,16 +5,11 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Login from "./Pages/Login";
 import Game from "./Pages/Game";
 
-interface Props {}
-interface State {}
+const App: React.FC = () => (
+  <Switch>
+    <Route exact path="/login" component={Login} />
+    <Route exact path="/" render={() => <Game />} />
+  </Switch>
+);
 
-export default class App extends Component<Props, State> {
-  render() {
-    return (
-      <Switch>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/" render={() => <Game />} />
-      </Switch>
-    );
-  }
-}
+export default App;
