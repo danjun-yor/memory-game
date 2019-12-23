@@ -27,7 +27,8 @@
       }
     }
 
-    .btn-login {
+    .btn-login,
+    .btn-signup {
       @include button;
       float: right;
     }
