@@ -64,9 +64,14 @@ class Game extends Component<Props, State> {
       <div className="App">
         <header>
           <h1>짝 맞추기 게임</h1>
-          <LinkButton to="/login" className="login-link">
-            로그인
-          </LinkButton>
+          <div className="sign-btn-group">
+            <LinkButton to="/signin" className="link-sign in">
+              로그인
+            </LinkButton>
+            <LinkButton to="/signup" className="link-sign up">
+              회원가입
+            </LinkButton>
+          </div>
         </header>
         <main>
           <section className="score-panel">

@@ -1,6 +1,6 @@
 @import "../../Styles/_basic";
 
-.login-container {
+.auth-container {
   height: 100%;
 
   .sign-in-form {
@@ -27,7 +27,7 @@
       }
     }
 
-    .btn-login,
+    .btn-signin,
     .btn-signup {
       @include button;
       float: right;
