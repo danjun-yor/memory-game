@@ -1,47 +1,52 @@
-import React, { useState, useRef } from "react";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import React, { useRef } from "react";
 import "./styles.scss";
 
-const SIGNIN_MUTATION = gql`
-  mutation SignInMutation($email: String!, $password: String!) {
-    signUp(email: $email, password: $password) {
-      token
-    }
-  }
-`;
-
-type TSignUpData = {
-  name: String;
-  email: String;
-  password: String;
-};
-
 export default () => {
-  const [signInMutation] = useMutation(SIGNIN_MUTATION);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
-  const signIn = async () => {
-    const {
-      data: {
-        signUp: { token }
-      }
-    } = await signInMutation({
-      variables: {
-        email: emailRef.current,
-        password: passwordRef.current
-      }
-    });
-    localStorage.setItem("token", token);
-  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     signIn();
+  };
+
+  const signIn = async () => {
+    const email = emailRef.current!.value;
+    const password = passwordRef.current!.value;
+    if (!email) {
+      alert("이메일을 입력해주세요.");
+      emailRef.current!.focus();
+      return;
+    }
+    if (!password) {
+      alert("비밀번호를 입력해주세요.");
+      passwordRef.current!.focus();
+      return;
+    }
+
+    const res = await fetch("http://localhost:4000", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+
+      body: JSON.stringify({
+        query: `mutation { 
+          signIn(email: "${email}", password: "${password}") {
+            token
+          }
+       }`
+      })
+    });
+    const { data, errors } = await res.json();
+    if (errors) {
+      alert(errors[0].message);
+      return;
+    }
+    const { token } = data;
+    localStorage.setItem("token", token);
   };
 
   return (

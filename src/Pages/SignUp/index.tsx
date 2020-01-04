@@ -21,8 +21,6 @@ export default () => {
   const [signUpMutation] = useMutation(SIGNUP_MUTATION);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  console.log(localStorage.getItem("token"));
-
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -39,6 +37,7 @@ export default () => {
         password: passwordRef.current
       }
     });
+    return;
     localStorage.setItem("token", token);
   };
 
