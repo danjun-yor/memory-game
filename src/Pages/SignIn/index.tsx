@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import "./styles.scss";
+import MyClient from "../../MyClient";
 
 export default () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -25,22 +26,12 @@ export default () => {
       return;
     }
 
-    const res = await fetch("http://localhost:4000", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
+    const { data, errors } = await MyClient.requestWithGraphQL(`mutation { 
+      signIn(email: "${email}", password: "${password}") {
+        token
+      }
+   }`);
 
-      body: JSON.stringify({
-        query: `mutation { 
-          signIn(email: "${email}", password: "${password}") {
-            token
-          }
-       }`
-      })
-    });
-    const { data, errors } = await res.json();
     if (errors) {
       alert(errors[0].message);
       return;
