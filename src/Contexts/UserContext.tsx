@@ -1,8 +1,14 @@
 import * as React from "react";
 
-type User = {
-  email: String;
-  name: String;
+export type User = {
+  iat: number;
+  email: string;
+  id: string;
+  name: string;
+  password: string;
+  records: Array<any>;
+  createdAt: string;
+  updatedAt: string | null;
 };
 
-const UserContext = React.createContext({});
+export const UserContext = React.createContext<User | null>(null);

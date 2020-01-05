@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { gql } from "apollo-boost";
 import "./styles.scss";
 import Deck from "../../Components/Deck";
 import { formatSeconds } from "../../Functions";
 import LinkButton from "../../Components/LinkButton";
+import { UserContext } from "../../Contexts/UserContext";
 
 interface Props {}
 interface State {}
@@ -59,42 +59,53 @@ class Game extends Component<Props, State> {
 
   render() {
     const { stage, score, time } = this.state;
-
     return (
-      <div className="App">
-        <header>
-          <h1>짝 맞추기 게임</h1>
-          <div className="sign-btn-group">
-            <LinkButton to="/signin" className="link-sign in">
-              로그인
-            </LinkButton>
-            <LinkButton to="/signup" className="link-sign up">
-              회원가입
-            </LinkButton>
-          </div>
-        </header>
-        <main>
-          <section className="score-panel">
-            <div>
-              스테이지: <span>{stage}</span>
-            </div>
-            <div>
-              점수: <span>{score}</span>
-            </div>
-            <div>
-              시간: <span>{formatSeconds(time)}</span>
-            </div>
-          </section>
-          <Deck
-            stage={stage}
-            scoreUp={this.scoreUp.bind(this)}
-            scoreDown={this.scoreDown.bind(this)}
-            stageUp={this.stageUp.bind(this)}
-          />
-        </main>
+      <UserContext.Consumer>
+        {value => {
+          return (
+            <div className="App">
+              <header>
+                <h1>짝 맞추기 게임</h1>
+                <div className="sign-btn-group">
+                  {value ? (
+                    <>{value.name}님 환영합니다!</>
+                  ) : (
+                    <>
+                      <LinkButton to="/signin" className="link-sign in">
+                        로그인
+                      </LinkButton>
+                      <LinkButton to="/signup" className="link-sign up">
+                        회원가입
+                      </LinkButton>
+                    </>
+                  )}
+                </div>
+              </header>
+              <main>
+                <section className="score-panel">
+                  <div>
+                    스테이지: <span>{stage}</span>
+                  </div>
+                  <div>
+                    점수: <span>{score}</span>
+                  </div>
+                  <div>
+                    시간: <span>{formatSeconds(time)}</span>
+                  </div>
+                </section>
+                <Deck
+                  stage={stage}
+                  scoreUp={this.scoreUp.bind(this)}
+                  scoreDown={this.scoreDown.bind(this)}
+                  stageUp={this.stageUp.bind(this)}
+                />
+              </main>
 
-        <footer></footer>
-      </div>
+              <footer></footer>
+            </div>
+          );
+        }}
+      </UserContext.Consumer>
     );
   }
 }
