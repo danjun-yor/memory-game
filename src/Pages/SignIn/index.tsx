@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import "./styles.scss";
 import MyClient from "../../MyClient";
@@ -42,7 +42,7 @@ export default () => {
       alert(errors[0].message);
       return;
     }
-    const { token } = data;
+    const { token } = data.signIn;
     localStorage.setItem("token", token);
 
     history.push("/");

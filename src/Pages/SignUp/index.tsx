@@ -1,50 +1,59 @@
-import React, { useState, useRef } from "react";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import React, { useRef } from "react";
 import "./styles.scss";
-
-const SIGNUP_MUTATION = gql`
-  mutation SignUpMutation($email: String!, $password: String!, $name: String!) {
-    signUp(email: $email, password: $password, name: $name) {
-      token
-    }
-  }
-`;
-
-type TSignUpData = {
-  name: String;
-  email: String;
-  password: String;
-};
+import MyClient from "../../MyClient";
+import { useHistory } from "react-router-dom";
 
 export default () => {
-  const [signUpMutation] = useMutation(SIGNUP_MUTATION);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
+  const history = useHistory();
 
-  const signUp = async () => {
-    const {
-      data: {
-        signUp: { token }
-      }
-    } = await signUpMutation({
-      variables: {
-        name: nameRef.current,
-        email: emailRef.current,
-        password: passwordRef.current
-      }
-    });
-    return;
-    localStorage.setItem("token", token);
-  };
+  let isSubmitting = false;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    signUp();
+    const email = emailRef.current!.value;
+    const password = passwordRef.current!.value;
+    const name = nameRef.current!.value;
+    if (!email) {
+      alert("이메일을 입력해주세요.");
+      emailRef.current!.focus();
+      return;
+    }
+    if (!password) {
+      alert("비밀번호를 입력해주세요.");
+      passwordRef.current!.focus();
+      return;
+    }
+    if (!name) {
+      alert("이름를 입력해주세요.");
+      nameRef.current!.focus();
+      return;
+    }
+
+    if (isSubmitting) {
+      return;
+    }
+
+    isSubmitting = true;
+    const { data, errors } = await MyClient.requestWithGraphQL(`mutation { 
+      signUp(email: "${email}", password: "${password}", name: "${name}") {
+        token
+      }
+   }`);
+    isSubmitting = false;
+
+    if (errors) {
+      alert(errors[0].message);
+      return;
+    }
+    const { token } = data.signUp;
+    localStorage.setItem("token", token);
+
+    alert("회원가입이 완료되었습니다.");
+    history.push("/");
   };
 
   return (
