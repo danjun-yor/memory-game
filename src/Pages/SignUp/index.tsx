@@ -38,7 +38,7 @@ export default () => {
     }
 
     isSubmitting = true;
-    const { data, errors } = await MyClient.requestWithGraphQL(`mutation { 
+    const { errors } = await MyClient.requestWithGraphQL(`mutation { 
       signUp(email: "${email}", password: "${password}", name: "${name}") {
         token
       }

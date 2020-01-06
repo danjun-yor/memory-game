@@ -61,7 +61,7 @@ class Game extends Component<Props, State> {
     const { stage, score, time } = this.state;
     return (
       <UserContext.Consumer>
-        {({ user, updateUser }) => {
+        {({ user }) => {
           return (
             <div className="App">
               <header>
