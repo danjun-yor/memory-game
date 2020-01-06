@@ -12,8 +12,13 @@ import { User } from "./Contexts/UserContext";
 
 library.add(fas);
 
+let user = null;
+
 const token = localStorage.getItem("token");
-const user = jwt.verify(token!, "awesome-memory-game") as User;
+
+if (token) {
+  user = jwt.verify(token, "awesome-memory-game") as User;
+}
 
 ReactDOM.render(
   <UserContext.Provider value={user}>
