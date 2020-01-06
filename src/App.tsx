@@ -19,23 +19,24 @@ class App extends Component<Props, State> {
     super(props);
 
     this.updateUser = () => {
-      let user = null;
-
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        user = jwt.verify(token!, "awesome-memory-game") as User;
-      }
-
       this.setState({
-        user
+        user: this.getUser()
       });
     };
 
     this.state = {
-      user: null,
+      user: this.getUser(),
       updateUser: this.updateUser
     };
+  }
+
+  getUser() {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      return jwt.verify(token!, "awesome-memory-game") as User;
+    }
+    return null;
   }
 
   render() {
