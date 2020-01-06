@@ -1,8 +1,8 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import "./reset.scss";
 import "./styles.scss";
 import jwt from "jsonwebtoken";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import Game from "./Pages/Game";

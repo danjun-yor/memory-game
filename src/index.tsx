@@ -6,8 +6,6 @@ import "normalize.css";
 import App from "./App";
 import { Router } from "react-router-dom";
 import { history } from "./history";
-import { UserContext } from "./Contexts/UserContext";
-import { User } from "./Contexts/UserContext";
 
 library.add(fas);
 

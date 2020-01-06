@@ -1,5 +1,4 @@
 import * as React from "react";
-import { SetStateAction, Dispatch } from "react";
 
 export type User = {
   iat: number;
