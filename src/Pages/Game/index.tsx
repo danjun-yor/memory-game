@@ -68,13 +68,23 @@ class Game extends Component<Props, State> {
                 <h1>짝 맞추기 게임</h1>
                 <div className="sign-btn-group">
                   {user && user["name"] ? (
-                    <>{user.name}님 환영합니다!</>
+                    <>
+                      <span style={{ marginRight: "5px" }}>{user.name}</span>
+                      <LinkButton className="link-btn in">내정보</LinkButton>
+                      <LinkButton className="link-btn up">로그아웃</LinkButton>
+                    </>
                   ) : (
                     <>
-                      <LinkButton to="/signin" className="link-sign in">
+                      <LinkButton
+                        to="/signin"
+                        className="link-btn link-sign in"
+                      >
                         로그인
                       </LinkButton>
-                      <LinkButton to="/signup" className="link-sign up">
+                      <LinkButton
+                        to="/signup"
+                        className="link-btn link-sign up"
+                      >
                         회원가입
                       </LinkButton>
                     </>
