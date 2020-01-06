@@ -49,10 +49,8 @@ export default () => {
       alert(errors[0].message);
       return;
     }
-    const { token } = data.signUp;
-    localStorage.setItem("token", token);
 
-    alert("회원가입이 완료되었습니다.");
+    alert("회원가입이 완료되었습니다.\n다시 로그인 해주시기 바랍니다.");
     history.push("/");
   };
 

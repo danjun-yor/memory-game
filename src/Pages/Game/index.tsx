@@ -61,14 +61,14 @@ class Game extends Component<Props, State> {
     const { stage, score, time } = this.state;
     return (
       <UserContext.Consumer>
-        {value => {
+        {({ user, updateUser }) => {
           return (
             <div className="App">
               <header>
                 <h1>짝 맞추기 게임</h1>
                 <div className="sign-btn-group">
-                  {value ? (
-                    <>{value.name}님 환영합니다!</>
+                  {user && user["name"] ? (
+                    <>{user.name}님 환영합니다!</>
                   ) : (
                     <>
                       <LinkButton to="/signin" className="link-sign in">

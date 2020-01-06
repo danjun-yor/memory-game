@@ -7,24 +7,13 @@ import App from "./App";
 import { Router } from "react-router-dom";
 import { history } from "./history";
 import { UserContext } from "./Contexts/UserContext";
-import jwt from "jsonwebtoken";
 import { User } from "./Contexts/UserContext";
 
 library.add(fas);
 
-let user = null;
-
-const token = localStorage.getItem("token");
-
-if (token) {
-  user = jwt.verify(token, "awesome-memory-game") as User;
-}
-
 ReactDOM.render(
-  <UserContext.Provider value={user}>
-    <Router history={history}>
-      <App />
-    </Router>
-  </UserContext.Provider>,
+  <Router history={history}>
+    <App />
+  </Router>,
   document.getElementById("root")
 );

@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import "./styles.scss";
 import MyClient from "../../MyClient";
+import { UserContext } from "../../Contexts/UserContext";
 
 export default () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -49,23 +50,36 @@ export default () => {
   };
 
   return (
-    <div className="container auth-container">
-      <form name="sign-in-form" className="sign-in-form" onSubmit={onSubmit}>
-        <div className="row">
-          <label htmlFor="email">이메일</label>
-          <input type="text" name="email" id="email" ref={emailRef} />
-        </div>
-        <div className="row">
-          <label htmlFor="password">비밀번호</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            ref={passwordRef}
-          />
-        </div>
-        <input type="submit" className="btn-signin" value="로그인" />
-      </form>
-    </div>
+    <UserContext.Consumer>
+      {({ user, updateUser }) => {
+        return (
+          <div className="container auth-container">
+            <form
+              name="sign-in-form"
+              className="sign-in-form"
+              onSubmit={e => {
+                onSubmit(e);
+                updateUser();
+              }}
+            >
+              <div className="row">
+                <label htmlFor="email">이메일</label>
+                <input type="text" name="email" id="email" ref={emailRef} />
+              </div>
+              <div className="row">
+                <label htmlFor="password">비밀번호</label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  ref={passwordRef}
+                />
+              </div>
+              <input type="submit" className="btn-signin" value="로그인" />
+            </form>
+          </div>
+        );
+      }}
+    </UserContext.Consumer>
   );
 };

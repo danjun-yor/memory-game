@@ -1,4 +1,5 @@
 import * as React from "react";
+import { SetStateAction, Dispatch } from "react";
 
 export type User = {
   iat: number;
@@ -11,4 +12,12 @@ export type User = {
   updatedAt: string | null;
 };
 
-export const UserContext = React.createContext<User | null>(null);
+export type UserContextInput = {
+  user: Partial<User> | null;
+  updateUser: () => void;
+};
+
+export const UserContext = React.createContext<UserContextInput>({
+  user: {},
+  updateUser: () => {}
+});
