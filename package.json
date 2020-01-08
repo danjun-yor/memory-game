@@ -53,5 +53,5 @@
     "gh-pages": "^2.1.1",
     "sass-loader": "^8.0.0"
   },
-  "homepage": "http://danjun-yor.github.io/memory-game"
+  "homepage": "https://danjun-yor.github.io/memory-game"
 }
