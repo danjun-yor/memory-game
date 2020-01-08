@@ -4,14 +4,15 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import "normalize.css";
 import App from "./App";
-import { Router } from "react-router-dom";
-import { history } from "./history";
+import { BrowserRouter } from "react-router-dom";
 
 library.add(fas);
 
 ReactDOM.render(
-  <Router history={history}>
+  <BrowserRouter
+    basename={process.env.NODE_ENV === "production" ? "/memory-game" : "/"}
+  >
     <App />
-  </Router>,
+  </BrowserRouter>,
   document.getElementById("root")
 );
