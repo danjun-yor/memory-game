@@ -146,7 +146,6 @@ export default class Deck extends Component<Props, State> {
   getNewCards(stage: number) {
     const cards = shuffle<IconDefinition>(allIcons).slice(0, stage + 2);
 
-    /* ToDo: 카드 갯수가 nxn보다 작으면 나머지 칸을 빈카드로 채움 */
     const mapSize = this.getMapSize(stage);
     const totalCardCount = Math.pow(mapSize, 2);
     const emptyCards = new Array(totalCardCount - cards.length * 2)
@@ -246,7 +245,7 @@ export default class Deck extends Component<Props, State> {
     checkCardIds.push(i);
 
     await this.flip([i]);
-    // console.log(checkCardIds);
+
     if (cards.every(card => !card.isFlipping)) {
       let succCnt = 0,
         failCnt = 0;
